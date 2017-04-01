@@ -1,0 +1,2 @@
+TO run this file without a required file passed into the command line, type
+"ruby tokenizer.rb". Follow the prompt to run the program.

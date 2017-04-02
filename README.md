@@ -5,6 +5,9 @@ First ruby program try(not counting hello world script)
 ## Tokenizer 
 The Tokenizer takes input from a provided file and splits the program into tokens based on the valid Core program syntax. The main function goes through the file line by line and passes words to the tokenize function, which splits up the word and returns an array of valid tokens to the main function to be evaluated.
 
+## Core BNF
+See the syntax for the CORE Language [here](/docs/core-bnf.md)
+
 ## How it works
 The Tokenizer class begins in the “collecting letters” and cycles to the “collecting digits” phase or “collecting symbol” phase based on the characters in the word. The tokenizer also checks that the token being built character by character is classified according to the Core syntax. It calls another function, called evaltoken, to evaluate the token generated and return the value of the token. If a token is found to be an error token, the program will print a message to the user informing them of the error and will then immediately terminate.
 

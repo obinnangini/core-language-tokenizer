@@ -290,12 +290,13 @@ class Tokenizer
 		fname = gets.chomp
 	else
 		fname = ARGV[0]
-    puts fname
-	end
+  end
     if tokenizefile(fname)
       printtokenValues()
       filePath =  File.expand_path(File.join(File.dirname(__FILE__), "output", "tokenized.txt"))
       writeTokensToFile(filePath);
+    else
+      puts "File #{fname} does not exist!"
     end
   end
 end

@@ -43,3 +43,6 @@ dist
 
 # Mac files
 .DS_Store
+
+# Output folder
+output

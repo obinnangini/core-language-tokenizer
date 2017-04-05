@@ -122,7 +122,7 @@ class Tokenizer
       end
     end
 
-    # add the last stuff to the array if not state == 0
+    # add the last stuff to the array if not state is not ERROR
     tokens[token_count] = tkn if state != States::ERROR
     return tokens
   end
@@ -162,7 +162,7 @@ class Tokenizer
 
   def identifier?(input)
     # Make sure identifier is all caps letters and numbers and numbers only come at the end
-    state = capletter?(input[0]) ? 1 : 0
+    state = capletter?(input[0]) ? States::LETTER : States::ERROR
     for i in 0..input.length - 1
       char = input[i]
       if state == States::LETTER # collecting letter

@@ -16,6 +16,7 @@ To use the Tokenizer, provide a file containing a core program as input. The fil
 
 ## Test Cases
 The Tokenizer was tested using the test cases as well as some error cases to ensure it terminated when encountering an error token. It gave correct results for all cases and there are no bugs to report.
+Program output can be validated against files found in output/ dir.
 
 ## Change Log
 1. First pass(and what was submitted for assigment) can be found at archive/tokenizer.rb

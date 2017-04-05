@@ -9,9 +9,6 @@ Each token is then evaluated, and the corresponding value is printed to the cons
 =end
 
 class Tokenizer
-  attr_accessor :all_toe
-  attr_accessor :dsequence
-  attr_accessor :stmtseq
 
   def initialize
     @alltokens = []

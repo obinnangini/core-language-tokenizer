@@ -1,6 +1,22 @@
 module Core
-    SYMBOLS = [';', ',', '=', '!', '[', ']', '&', '|', '(', ')', '+', '-', '*', '>', '<']
-    KEYWORDS = {
+  SYMBOLS = [
+    ';',
+    ',',
+    '=',
+    '!',
+    '[',
+    ']',
+    '&',
+    '|',
+    '(',
+    ')',
+    '+',
+    '-',
+    '*',
+    '>',
+    '<'
+  ].map(&:freeze).freeze
+  KEYWORDS = {
     'program' => 1,
     'begin' => 2,
     'end' => 3,
@@ -31,21 +47,23 @@ module Core
     '>' => 28,
     '<=' => 29,
     '>=' => 30
-    }
-    NUMBER = 31
-    IDENTIFIER = 32
-    EOF = 33
-    ERROR = 35
+  }.freeze
+  NUMBER = 31.freeze
+  IDENTIFIER = 32.freeze
+  EOF = 33.freeze
+  ERROR = 35.freeze
 
-    def Core.isSymbol?(token)
-        return SYMBOLS.include?(token)
-    end
-
-    def Core.isKeyword?(token)
-        return KEYWORDS.key?(token)
-    end
-
-    def Core.getKeywordValue(token)
-        return KEYWORDS[token]
-    end
+  def Core.isSymbol?(token)
+      return SYMBOLS.include?(token)
   end
+
+  def Core.isKeyword?(token)
+      return KEYWORDS.key?(token)
+  end
+
+  def Core.getKeywordValue(token)
+      return KEYWORDS[token]
+  end
+end
+
+Core.freeze

@@ -30,11 +30,12 @@ class Tokenizer
   end
 
   module States
-    ERROR = 0
-    LETTER = 1
-    DIGIT = 2
-    SYMBOL = 3
+    ERROR = 0.freeze
+    LETTER = 1.freeze
+    DIGIT = 2.freeze
+    SYMBOL = 3.freeze
   end
+  States.freeze
 
   def tokenize(input)
     Array tokens = []
@@ -102,22 +103,22 @@ class Tokenizer
           tkn = char
           state = States::DIGIT
         elsif Core.isSymbol?(char)
-          if char == '=' && tkn.length == 1 && !added_symbol && symbolCanPrecedeEquals?(tkn[0])
-            tkn << char
-            state = States::SYMBOL
-          elsif char == '&' && tkn[tkn.length - 2] == '&'
-            tkn << char unless added_symbol
-          elsif char == '|' && tkn[tkn.length - 2] == '|'
-            tkn << char unless added_symbol
-          elsif !added_symbol
-            tokens[token_count] = tkn
-            token_count += 1
-            tkn = char
-          elsif added_symbol
-            tkn = char
-          else
-            state = States::ERROR
-          end
+            if char == '=' && tkn.length == 1 && !added_symbol && symbolCanPrecedeEquals?(tkn[0])
+              tkn << char
+              state = States::SYMBOL
+            elsif char == '&' && tkn[0] == '&'
+              tkn << char unless added_symbol
+            elsif char == '|' && tkn[0] == '|'
+              tkn << char unless added_symbol
+            elsif !added_symbol
+              tokens[token_count] = tkn
+              token_count += 1
+              tkn = char
+            elsif added_symbol
+              tkn = char
+            else
+              state = States::ERROR
+            end
         end
       end
     end

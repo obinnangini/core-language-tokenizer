@@ -11,7 +11,7 @@ Each token is then evaluated, and the corresponding value is printed to the cons
 class Tokenizer
 
   def initialize
-    @alltokens = []
+    @all_tokens = []
     @token_values = []
     @curr_token = 0
     @tot_tkn_count = 0
@@ -25,7 +25,7 @@ class Tokenizer
     char =~ /[A-Za-z]/
   end
 
-  def capletter?(char)
+  def upper_case?(char)
     char =~ /[A-Z]/
   end
 
@@ -41,13 +41,13 @@ class Tokenizer
     Array tokens = []
     token_count = 0
     tkn = ''
-    state = States::LETTER # letter is starting postition
+    state = States::LETTER # letter is starting position
     for i in 0..input.length - 1
       char = input[i]
       added_symbol = false
       if state == States::ERROR
         # Keep collecting characters until a symbol is found
-        if !Core.isSymbol?(char)
+        if !Core.symbol?(char)
           tkn << char
           state = States::ERROR
         else
@@ -63,7 +63,7 @@ class Tokenizer
         elsif numeric?(char)
           state = States::DIGIT
         # Change to symbol collection state
-        elsif Core.isSymbol?(char)
+        elsif Core.symbol?(char)
           # If there is a non empty token, add to array of tokens
           if tkn != ''
             tokens[token_count] = tkn
@@ -74,7 +74,7 @@ class Tokenizer
           added_symbol = true
         end
       end
-      if state == States::DIGIT #  collecting digits
+      if state == States::DIGIT # collecting digits
         # Go to error state if letter comes after digit
         if letter?(char)
           tkn << char
@@ -82,7 +82,7 @@ class Tokenizer
         elsif numeric?(char)
           state = 2
           tkn << char
-        elsif Core.isSymbol?(char)
+        elsif Core.symbol?(char)
           tokens[token_count] = tkn
           token_count += 1
           tkn = char
@@ -90,7 +90,7 @@ class Tokenizer
           added_symbol = true
         end
       end
-      if state == 3 # collecting symbols
+      if state == States::SYMBOL # collecting symbols
         # Fix bug to enable this not add blank to the array
         if letter?(char)
           tokens[token_count] = tkn
@@ -102,8 +102,8 @@ class Tokenizer
           token_count += 1
           tkn = char
           state = States::DIGIT
-        elsif Core.isSymbol?(char)
-            if char == '=' && tkn.length == 1 && !added_symbol && symbolCanPrecedeEquals?(tkn[0])
+        elsif Core.symbol?(char)
+            if char == '=' && tkn.length == 1 && !added_symbol && symbol_can_precedes_equals?(tkn[0])
               tkn << char
               state = States::SYMBOL
             elsif char == '&' && tkn[0] == '&'
@@ -122,20 +122,19 @@ class Tokenizer
         end
       end
     end
-
-    # add the last stuff to the array if not state is not ERROR
+    # add the last stuff to the array if state is not ERROR
     tokens[token_count] = tkn if state != States::ERROR
     return tokens
   end
 
-  def symbolCanPrecedeEquals?(char)
+  def symbol_can_precedes_equals?(char)
     return char == '>' || char == '<' || char == '!' || char == '='
   end
 
-  def evaltoken(input)
+  def eval_token(input)
     x = 0
-    if Core.isKeyword?(input)
-      x = Core.getKeywordValue(input)
+    if Core.keyword?(input)
+      x = Core.keyword_val(input)
     elsif number?(input)
       x = Core::NUMBER
     elsif identifier?(input)
@@ -163,18 +162,18 @@ class Tokenizer
 
   def identifier?(input)
     # Make sure identifier is all caps letters and numbers and numbers only come at the end
-    state = capletter?(input[0]) ? States::LETTER : States::ERROR
+    state = upper_case?(input[0]) ? States::LETTER : States::ERROR
     for i in 0..input.length - 1
       char = input[i]
       if state == States::LETTER # collecting letter
-        if capletter?(char)
+        if upper_case?(char)
           state = States::LETTER
         elsif numeric?(char)
           state = States::DIGIT
         end
       end
       if state == States::DIGIT # collecting digits
-        if capletter?(char)
+        if upper_case?(char)
           state = States::ERROR
           break
         elsif numeric?(char)
@@ -185,7 +184,7 @@ class Tokenizer
     return state != States::ERROR
   end
 
-  def skiptoken
+  def skip_token
     flag = false
     if @curr_token < @tot_tkn_count - 1
       @curr_token += 1
@@ -194,31 +193,31 @@ class Tokenizer
     return flag
   end
 
-  def gettoken
-    return @alltokens[@curr_token]
+  def get_token
+    return @all_tokens[@curr_token]
   end
 
-  def printtokens
-    @alltokens.each do |token|
+  def print_tokens
+    @all_tokens.each do |token|
       puts token
     end
   end
 
-  def printtokenValues
+  def print_token_values
     @token_values.each do |token|
       puts token
     end
   end
 
-  def writeTokensToFile(fname)
-    File.open(fname, 'w') do |f|
+  def write_tokens_to_file(fname)
+    File.open(fname, 'w') do |file|
       @token_values.each do |token|
-        f.puts token
+        file.puts token
       end
     end
   end
 
-  def tokenizefile(fname)
+  def tokenize_file(fname)
     exists = false
     if File.file?(fname)
       exists = true
@@ -227,8 +226,8 @@ class Tokenizer
         temp.each do |word|
           Array tokens = tokenize(word)
           tokens.each do |token|
-            @alltokens[@tot_tkn_count] = token
-            value = evaltoken(token)
+            @all_tokens[@tot_tkn_count] = token
+            value = eval_token(token)
             @token_values[@tot_tkn_count] = value
             @tot_tkn_count += 1
             if value == Core::ERROR
@@ -252,10 +251,10 @@ class Tokenizer
       print 'Please enter the filename: '
       fname = gets.chomp
     end
-    if tokenizefile(fname)
-      printtokenValues
+    if tokenize_file(fname)
+      print_token_values
       file_path = File.expand_path(File.join(File.dirname(__FILE__), 'output', 'tokenized.txt'))
-      writeTokensToFile(file_path)
+      write_tokens_to_file(file_path)
     else
       puts "File #{fname} does not exist!"
     end

@@ -53,15 +53,15 @@ module Core
   EOF = 33.freeze
   ERROR = 35.freeze
 
-  def Core.isSymbol?(token)
+  def self.symbol?(token)
       return SYMBOLS.include?(token)
   end
 
-  def Core.isKeyword?(token)
+  def self.keyword?(token)
       return KEYWORDS.key?(token)
   end
 
-  def Core.getKeywordValue(token)
+  def self.keyword_val(token)
       return KEYWORDS[token]
   end
 end

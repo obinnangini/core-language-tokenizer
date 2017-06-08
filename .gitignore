@@ -40,6 +40,9 @@ dist
 #IntelliJ IDEA metadata
 *.iml
 
+#Visual Studio metadata
+.vs
+
 #Visual Studio code metadata
 .vscode
 

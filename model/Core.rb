@@ -16,6 +16,7 @@ module Core
     '>',
     '<'
   ].map(&:freeze).freeze
+  # SYMBOLS = %w(; ' = ! [ ] & | ( ) + - * > <).map(&:freeze).freeze
   KEYWORDS = {
     'program' => 1,
     'begin' => 2,
